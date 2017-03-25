@@ -86,4 +86,4 @@ def get_training_data(lines, data_folder):
         measurements.append(-(float(line[3]) - 0.1))
 
     images = images_left + images_right + images_center
-    return images, measurements
+    return np.array(images), measurements
