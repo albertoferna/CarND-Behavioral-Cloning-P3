@@ -84,7 +84,7 @@ def get_training_data(lines, data_folder):
         measurements.append(float(line[3]) + 0.1)
         flipped = cv2.flip(left_image.copy(), 1)
         images_left.append(toRGB(flipped))
-        measurements.append((-float(line[3]) + 0.1))
+        measurements.append(-(float(line[3]) + 0.1))
 
         right_file = line[2].split('/')[-1]
         right_image = cv2.imread(data_folder + 'IMG/' + right_file.strip())
