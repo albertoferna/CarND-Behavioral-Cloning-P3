@@ -2,9 +2,11 @@ import numpy as np
 import csv
 import cv2
 
+
 def toRGB(img):
     """ Needed because the image sent by the simulator is in RGB, not BGR"""
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
 
 def read_data(data_folder, samples, bins):
     """ Helper function to select what data to use before training the networks
@@ -25,16 +27,19 @@ def read_data(data_folder, samples, bins):
         angles_list.append(float(line[3].strip()))
     angles = np.array(angles_list)
     # Cut too high or too low
-    chopped_index = (np.abs(angles) < 0.5)
+    chopped_index = (np.abs(angles) < 1.0)
     chopped_lines = np.array(lines[1:])[chopped_index]
     chopped_angles = angles[chopped_index]
     # Remove most of zero steering angle samples
     zero_angle_index = (chopped_angles == 0)
-    valid_angle_index= (chopped_angles != 0)
+    valid_angle_index = (chopped_angles != 0)
     zero_angle_lines = chopped_lines[zero_angle_index]
     valid_lines = chopped_lines[valid_angle_index]
     valid_angles = chopped_angles[valid_angle_index]
     # Select random samples from zero angle
+    if n > len(zero_angle_lines):
+        # select all samples
+        n = len(zero_angle_lines) - 1
     idx = np.random.choice(len(zero_angle_lines) - 1, n, replace=False)
     valid_lines = np.vstack((valid_lines, zero_angle_lines[idx]))
     valid_angles = np.hstack((valid_angles, np.zeros(n)))
@@ -89,5 +94,12 @@ def get_training_data(lines, data_folder):
         images_right.append(toRGB(flipped))
         measurements.append(-(float(line[3]) - 0.1))
 
-    images = images_left + images_right + images_center
+    images = images_center + images_left + images_right
     return np.array(images), measurements
+
+
+def get_cropped_data(data):
+    cropped = []
+    for img in data:
+        cropped.append(img[55:140, :, :])
+    return np.array(cropped)
