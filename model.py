@@ -1,3 +1,4 @@
+# Model based on AlexNet
 from keras.models import Sequential
 from keras.layers.convolutional import Convolution2D
 from keras.layers.convolutional import Cropping2D
