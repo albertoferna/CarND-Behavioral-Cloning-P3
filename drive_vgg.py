@@ -13,6 +13,7 @@ from flask import Flask
 from io import BytesIO
 
 from keras.models import load_model
+from keras import applications
 import h5py
 from keras import __version__ as keras_version
 
@@ -44,7 +45,7 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.01, 0.0002)
-set_speed = 12
+set_speed = 9
 controller.set_desired(set_speed)
 
 
@@ -61,13 +62,10 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
-        #steering_angle = float(model.predict(image_array[None, 55:140, :, :], batch_size=1))
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+        vgg_feat = pre_model.predict(image_array[None, 55:140, :, :], batch_size=1)
+        steering_angle = float(model.predict(vgg_feat))
 
         throttle = controller.update(float(speed))
-
-        #if abs(steering_angle) < 0.01:
-        #    steering_angle = 0.0
 
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
@@ -124,6 +122,7 @@ if __name__ == '__main__':
               ', but the model was built using ', model_version)
 
     model = load_model(args.model)
+    pre_model = applications.VGG16(include_top=False, input_shape=(85, 320, 3))
 
     if args.image_folder != '':
         print("Creating image folder at {}".format(args.image_folder))

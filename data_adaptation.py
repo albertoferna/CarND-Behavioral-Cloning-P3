@@ -95,7 +95,7 @@ def get_training_data(lines, data_folder):
         measurements.append(-(float(line[3]) - 0.1))
 
     images = images_center + images_left + images_right
-    return np.array(images), measurements
+    return np.array(images), np.array(measurements)
 
 
 def get_cropped_data(data):
