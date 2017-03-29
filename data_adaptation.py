@@ -13,7 +13,6 @@ def read_data(data_folder, samples, bins):
     It takes a data folder, an approximate number of total samples to select and
     the number of bins used to balance how distributed angles are"""
     lines = []
-    n = int(2 * samples / bins)  # number of samples of angle zero to consider
     samples_per_bin = samples // bins
 
     with open(data_folder + 'driving_log.csv') as csv_file:
@@ -103,3 +102,11 @@ def get_cropped_data(data):
     for img in data:
         cropped.append(img[55:140, :, :])
     return np.array(cropped)
+
+"""def generate_data(x_data, y_data, batch_size):
+    while 1:
+        x_out = []
+        y_out = []
+
+        for i in range(0, batch_size):"""
+
