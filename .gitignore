@@ -99,3 +99,5 @@ ENV/
 .idea/
 data*/
 /.ipynb_checkpoints/
+/vgg_reuse.h5
+/model_LeNet.h5
