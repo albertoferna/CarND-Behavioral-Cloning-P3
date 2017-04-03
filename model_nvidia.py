@@ -30,6 +30,10 @@ model.add(Flatten())
 model.add(Dropout(0.25))
 model.add(ELU())
 
+model.add(Dense(1164, kernel_initializer='glorot_uniform'))
+model.add(Dropout(0.25))
+model.add(ELU())
+
 model.add(Dense(100, kernel_initializer='glorot_uniform'))
 model.add(Dropout(0.25))
 model.add(ELU())
@@ -49,14 +53,14 @@ model.add(Dense(1, kernel_initializer='glorot_uniform', name='output'))
 # Compile it
 model.compile(optimizer="adam", loss="mse", lr=0.0001)
 saving = ModelCheckpoint('nvidia.{epoch:02d}-{val_loss:.3f}.h5', save_best_only=True)
-earlyStopping = EarlyStopping(monitor='val_loss', patience=0, verbose=0, mode='auto')
+earlyStopping = EarlyStopping(monitor='val_loss', patience=1, verbose=0, mode='auto')
 
 data_folder = '../CarND-Data-P3/data_all/'
-trials = 5
-for i in range(trials):
-    # Data read is picked randomly with a certain distribution. So this can run several times
-    used_samples = read_data(data_folder, samples_per_bin=50, bins=150)
-    X_train, y_train = get_training_data(used_samples, data_folder)
-    model.fit(X_train, y_train, batch_size=128, validation_split=0.3, shuffle=True, epochs=10,
-              callbacks=[saving, earlyStopping])
+
+# Data read is picked randomly with a certain distribution. So this can run several times
+used_samples = read_data(data_folder, samples_per_bin=80, bins=250)
+X_train, y_train = get_training_data(used_samples, data_folder)
+model.fit(X_train, y_train, batch_size=128, validation_split=0.2, shuffle=True, epochs=50,
+          callbacks=[saving, earlyStopping])
+
 model.save('model_nvidia.h5')
