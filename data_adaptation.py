@@ -3,9 +3,9 @@ import csv
 import cv2
 
 
-def toRGB(img):
+def toYUV(img):
     """ Needed because the image sent by the simulator is in RGB, not BGR"""
-    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
 
 
 def read_data(data_folder, samples_per_bin=100, bins=100):
@@ -60,26 +60,26 @@ def get_training_data(lines, data_folder):
     for line in lines:
         center_file = line[0].split('/')[-1]
         center_image = cv2.imread(data_folder + 'IMG/' + center_file.strip())
-        images_center.append(toRGB(center_image))
+        images_center.append(toYUV(center_image))
         measurements.append(float(line[3]))
         flipped = cv2.flip(center_image.copy(), 1)
-        images_center.append(toRGB(flipped))
+        images_center.append(toYUV(flipped))
         measurements.append(-float(line[3]))
 
         left_file = line[1].split('/')[-1]
         left_image = cv2.imread(data_folder + 'IMG/' + left_file.strip())
-        images_left.append(toRGB(left_image))
+        images_left.append(toYUV(left_image))
         measurements.append(float(line[3]) + 0.25)
         flipped = cv2.flip(left_image.copy(), 1)
-        images_left.append(toRGB(flipped))
+        images_left.append(toYUV(flipped))
         measurements.append(-(float(line[3]) + 0.25))
 
         right_file = line[2].split('/')[-1]
         right_image = cv2.imread(data_folder + 'IMG/' + right_file.strip())
-        images_right.append(toRGB(right_image))
+        images_right.append(toYUV(right_image))
         measurements.append(float(line[3]) - 0.25)
         flipped = cv2.flip(right_image.copy(), 1)
-        images_right.append(toRGB(flipped))
+        images_right.append(toYUV(flipped))
         measurements.append(-(float(line[3]) - 0.25))
 
     images = images_center + images_left + images_right
