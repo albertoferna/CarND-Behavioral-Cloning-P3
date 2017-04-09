@@ -20,7 +20,7 @@ sio = socketio.Server()
 app = Flask(__name__)
 model = None
 prev_image_array = None
-
+from data_adaptation import *
 
 class SimplePIController:
     def __init__(self, Kp, Ki):
@@ -61,16 +61,20 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
+        img = process_img(image_array)
         #steering_angle = float(model.predict(image_array[None, 55:140, :, :], batch_size=1))
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+        new_steering = float(model.predict(img[None, :, :, :], batch_size=1))
 
         throttle = controller.update(float(speed))
+        # possible smoothing mechanism
+        alpha = 0.0
+        steering = float(steering_angle) / 25.0 * alpha + (1 - alpha) * new_steering
 
-        #if abs(steering_angle) < 0.01:
-        #    steering_angle = 0.0
+        if abs(steering) < 0.00:
+            steering = 0.0
 
-        print(steering_angle, throttle)
-        send_control(steering_angle, throttle)
+        print(steering, throttle)
+        send_control(steering, throttle)
 
         # save frame
         if args.image_folder != '':

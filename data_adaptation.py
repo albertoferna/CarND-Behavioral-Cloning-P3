@@ -2,10 +2,21 @@ import numpy as np
 import csv
 import cv2
 
+# Common variables to the pipeline
+w = 64
+h = 32
+side_correction = 0.25
 
 def toRGB(img):
     """ Needed because the image sent by the simulator is in RGB, not BGR"""
     return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+
+def process_img(img):
+    """image resizing to reduce data size"""
+    crop = img[70:130, :]
+    res = cv2.resize(crop, (w, h), interpolation=cv2.INTER_CUBIC)
+    return res
 
 
 def read_data(data_folder, samples_per_bin=100, bins=100):
@@ -31,7 +42,7 @@ def read_data(data_folder, samples_per_bin=100, bins=100):
     # Selecting final samples to use
     hist = np.histogram(angles, bins=bins)
     used_samples = []
-    # make use extremes are included
+    # make sure extremes are included
     hist[1][-1] += 0.0000001
     bin_start = min(angles)
     # Here we try to balance the samples by setting a maximum per bin
@@ -57,30 +68,31 @@ def get_training_data(lines, data_folder):
     images_left = []
     images_right = []
     measurements = []
+
     for line in lines:
         center_file = line[0].split('/')[-1]
         center_image = cv2.imread(data_folder + 'IMG/' + center_file.strip())
-        images_center.append(toRGB(center_image))
+        images_center.append(process_img(toRGB(center_image)))
         measurements.append(float(line[3]))
         flipped = cv2.flip(center_image.copy(), 1)
-        images_center.append(toRGB(flipped))
+        images_center.append(process_img(toRGB(flipped)))
         measurements.append(-float(line[3]))
 
         left_file = line[1].split('/')[-1]
         left_image = cv2.imread(data_folder + 'IMG/' + left_file.strip())
-        images_left.append(toRGB(left_image))
-        measurements.append(float(line[3]) + 0.25)
+        images_left.append(process_img(toRGB(left_image)))
+        measurements.append(float(line[3]) + side_correction)
         flipped = cv2.flip(left_image.copy(), 1)
-        images_left.append(toRGB(flipped))
-        measurements.append(-(float(line[3]) + 0.25))
+        images_left.append(process_img(toRGB(flipped)))
+        measurements.append(-(float(line[3]) + side_correction))
 
         right_file = line[2].split('/')[-1]
         right_image = cv2.imread(data_folder + 'IMG/' + right_file.strip())
-        images_right.append(toRGB(right_image))
-        measurements.append(float(line[3]) - 0.25)
+        images_right.append(process_img(toRGB(right_image)))
+        measurements.append(float(line[3]) - side_correction)
         flipped = cv2.flip(right_image.copy(), 1)
-        images_right.append(toRGB(flipped))
-        measurements.append(-(float(line[3]) - 0.25))
+        images_right.append(process_img(toRGB(flipped)))
+        measurements.append(-(float(line[3]) - side_correction))
 
     images = images_center + images_left + images_right
     return np.array(images), np.array(measurements)
