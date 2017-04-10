@@ -39699,7 +39699,7 @@ AAAAGIk3AAAAjMQbAAAARuINAAAAI/EGAACAUQXWOfMhlI8lAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
@@ -39714,10 +39714,24 @@ AAAAGIk3AAAAjMQbAAAARuINAAAAI/EGAACAUQXWOfMhlI8lAAAAAElFTkSuQmCC
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Using TensorFlow backend.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
@@ -39734,11 +39748,11 @@ AAAAGIk3AAAAjMQbAAAARuINAAAAI/EGAACAUQXWOfMhlI8lAAAAAElFTkSuQmCC
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Convolution2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">))</span>
 
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Flatten</span><span class="p">())</span>
-<span class="c1">#model.add(Dropout(.2))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="o">.</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">BatchNormalization</span><span class="p">())</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ELU</span><span class="p">())</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)))</span>
-<span class="c1">#model.add(Dropout(.5))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">BatchNormalization</span><span class="p">())</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ELU</span><span class="p">())</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -54861,9 +54875,83 @@ AABJRU5ErkJggg==
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Numerical error does not seem too good. However, from previous experiments it was clear that this was not a perfect indicator by any means. By testing the model in the track, I could check that it was able to drive around it continuously at 9 mph. I increased the speed to 15 mph. At this speed the car’s behavior is quite erratic, but it still goes around. One can start seen some indication of instability in the control of the car. I left the speed at 12 and that is what is shown in the video.</p>
 <h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">&#182;</a></h2><p>After a lot of different test I came to a very similar conclusion than before. As a methodology I think it is much better to come from a simple model and complicate it later than to start from a complex one an try to simplify it. In this case, it is interesting to notice how just a 64x32 image conveys enough information to drive the car around. That is some that I would consider any other time I have to do deep learning.</p>
+<p>This is the summary of the model:</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+lambda_1 (Lambda)            (None, 32, 64, 3)         0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 32, 64, 3)         12        
+_________________________________________________________________
+batch_normalization_1 (Batch (None, 32, 64, 3)         12        
+_________________________________________________________________
+elu_1 (ELU)                  (None, 32, 64, 3)         0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 8, 16, 16)         1216      
+_________________________________________________________________
+batch_normalization_2 (Batch (None, 8, 16, 16)         64        
+_________________________________________________________________
+elu_2 (ELU)                  (None, 8, 16, 16)         0         
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 4, 8, 32)          4640      
+_________________________________________________________________
+batch_normalization_3 (Batch (None, 4, 8, 32)          128       
+_________________________________________________________________
+elu_3 (ELU)                  (None, 4, 8, 32)          0         
+_________________________________________________________________
+conv2d_4 (Conv2D)            (None, 2, 4, 64)          18496     
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 512)               0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 512)               0         
+_________________________________________________________________
+batch_normalization_4 (Batch (None, 512)               2048      
+_________________________________________________________________
+elu_4 (ELU)                  (None, 512)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 512)               262656    
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 512)               0         
+_________________________________________________________________
+batch_normalization_5 (Batch (None, 512)               2048      
+_________________________________________________________________
+elu_5 (ELU)                  (None, 512)               0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 1)                 513       
+=================================================================
+Total params: 291,833.0
+Trainable params: 289,683.0
+Non-trainable params: 2,150.0
+_________________________________________________________________
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
